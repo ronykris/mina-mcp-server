@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -6,8 +8,24 @@ import dotenv from "dotenv";
 import { ZkAppTransaction } from "./Interface.js";
 import { BLOCKBERRY_API_BASE, BLOCKBERRY_API_KEY } from "./config.js";
 import { fetchRecentZkAppTransactions, formatZkAppTransaction } from "./helper.js";
+import { Command } from 'commander';
 
 dotenv.config();
+
+const program = new Command();
+
+program
+  .name('mina-mcp')
+  .description('Mina Blockchain MCP Server')
+  .option('-k, --api-key <key>', 'Blockberry API key')
+
+program.parse(process.argv);
+
+const options = program.opts();
+
+if (options.apiKey) {
+    process.env.BLOCKBERRY_API_KEY = options.apiKey;
+}
 
 if (!BLOCKBERRY_API_KEY) {
     console.error("Warning: BLOCKBERRY_API_KEY not set. zkApp transaction queries will fail.");

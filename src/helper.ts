@@ -45,11 +45,12 @@ export const formatZkAppTransaction = (tx: any, verbose: boolean = true): string
     if (!tx) return "No transaction data available";
   
     try {
+        // Determine the response type
         const isSingleTxResponse = !!tx.txHash && tx.updatedAccounts && Array.isArray(tx.updatedAccounts);
         const isListResponse = tx.age !== undefined && tx.updatedAccounts && Array.isArray(tx.updatedAccounts);
         const isLegacyResponse = tx.zkappCommand && tx.zkappCommand.accountUpdates;
         
-        // Basic transaction info
+        // Basic transaction info - handle both formats
         const txHash = tx.txHash || tx.hash || "Unknown";
         const blockHeight = tx.blockHeight || "Unknown";
         
@@ -112,19 +113,14 @@ export const formatZkAppTransaction = (tx: any, verbose: boolean = true): string
         } else if (tx.failureReason) {
             // Legacy or simple failure reason
             failureInfo = `\nFailure: ${tx.failureReason}`;
-        } else if (status.toLowerCase() === 'failed' || status.toLowerCase().includes('error')) {
-            // Status indicates failure but no specific reason
-            failureInfo = '\nTransaction failed, but no specific failure reason provided';
         }
         
-        // Total balance changes
         let balanceChangeInfo = "";
         if (tx.totalBalanceChange !== undefined) {
             balanceChangeInfo = `\nTotal Balance Change: ${tx.totalBalanceChange} MINA` +
                 (tx.totalBalanceChangeUsd !== undefined ? ` ($${tx.totalBalanceChangeUsd})` : "");
         }
         
-        // Security warnings
         const securityWarnings = [];
         if (tx.isAccountHijack === true) {
             securityWarnings.push("⚠️ Possible account hijacking detected");
@@ -146,8 +142,7 @@ export const formatZkAppTransaction = (tx: any, verbose: boolean = true): string
                 payerInfo,
                 `Fee: ${fee}${feeUsd}`,
                 securityWarnings.length > 0 ? `Security: ${securityWarnings.join(", ")}` : "",
-                tx.totalBalanceChange !== undefined ? `Balance Change: ${tx.totalBalanceChange} MINA` : "",
-                status.toLowerCase() === 'failed' ? "❌ Transaction failed" : ""
+                tx.totalBalanceChange !== undefined ? `Balance Change: ${tx.totalBalanceChange} MINA` : ""
             ].filter(line => line).join("\n");
             
             return conciseSummary;
@@ -171,9 +166,6 @@ export const formatZkAppTransaction = (tx: any, verbose: boolean = true): string
                 const callInfo = account.callData && account.callData !== "0"
                     ? `\n    Call Data: ${account.callData}`
                     : "";
-                const callDepth = account.callDepth !== undefined 
-                    ? `\n    Call Depth: ${account.callDepth}`
-                    : "";
                 const scamWarning = account.accountScam && (account.accountScam.securityMessage || account.accountScam.defaultSecurityMessage)
                     ? `\n    ⚠️ Security Warning: ${account.accountScam.securityMessage || account.accountScam.defaultSecurityMessage}`
                     : "";
@@ -191,16 +183,7 @@ export const formatZkAppTransaction = (tx: any, verbose: boolean = true): string
                     }
                 }
                 
-                // Check for failures related to this account/index
-                let accountFailures = "";
-                if (tx.failures && tx.failures.length > 0) {
-                    const relevantFailures = tx.failures.filter((f: any) => f.index === index);
-                    if (relevantFailures.length > 0) {
-                        accountFailures = `\n    ❌ Failures: ${relevantFailures.map((f: any) => f.failureReason).join(', ')}`;
-                    }
-                }
-                
-                return `  Update #${index + 1}: ${name}\n    Address: ${account.accountAddress}${balanceChange}${tokenInfo}${callInfo}${callDepth}${appStateUpdates}${scamWarning}${accountFailures}`;
+                return `  Update #${index + 1}: ${name}\n    Address: ${account.accountAddress}${balanceChange}${tokenInfo}${callInfo}${appStateUpdates}${scamWarning}`;
             }).join('\n\n');
             
             accountUpdatesText = `\nUpdated Accounts (${tx.updatedAccountsCount || tx.updatedAccounts.length}):\n${formattedAccounts}`;
@@ -242,8 +225,8 @@ export const formatZkAppTransaction = (tx: any, verbose: boolean = true): string
             `Nonce: ${nonce}`,
             `Memo: ${memo}`,
             securityWarningsText,
-            failureInfo,
             balanceChangeInfo,
+            failureInfo,
             accountUpdatesText
         ].filter(line => line).join('\n');
     } catch (error) {

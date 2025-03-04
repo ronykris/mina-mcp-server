@@ -1,27 +1,36 @@
 {
   "name": "mina-mcp-server",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "type": "module",
   "bin": {
-    "zkAppTxns": "./build/index.js"
+    "mina-mcp": "./build/index.js"
   },
   "scripts": {
-    "start": "node build/index.js",
+    "start": "node ./build/index.js",
     "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
     "test": "tsc && node build/test.js",
-    "inspector": "npx @modelcontextprotocol/inspector node build/index.js"
+    "inspector": "npx @modelcontextprotocol/inspector node build/index.js",
+    "prepublish": "npm run build"
   },
   "files": [
     "build"
   ],
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "mina",
+    "blockchain",
+    "mcp",
+    "claude",
+    "llm",
+    "zkapp"
+  ],
+  "author": "0xkrish",
   "license": "ISC",
-  "description": "",
+  "description": "A Mina blockchain MCP server for interfacing with LLMs",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.0",
     "axios": "^1.8.1",
+    "commander": "^13.1.0",
     "dotenv": "^16.4.7",
     "o1js": "^2.2.0",
     "zod": "^3.24.2"
