@@ -16,6 +16,10 @@ jobs:
         with:
           node-version: 21
           registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: npm ci
+        
       - run: npm version patch
       - run: npm publish
         env:
