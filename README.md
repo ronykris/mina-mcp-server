@@ -22,7 +22,7 @@ The server implements the [Model Context Protocol (MCP)](https://github.com/mode
 
 ## Demo
  
- [![Talk to the mina blokchain!](./mina-mcp-server.mp4)]
+ [![](https://markdown-videos-api.jorgenkh.no/youtube/H5IludqauXA)](https://youtu.be/H5IludqauXA)
  
 ## Prerequisites
 
