@@ -9,9 +9,12 @@
   "scripts": {
     "start": "node ./build/index.js",
     "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
-    "test": "tsc && node build/test.js",
+    "fetch": "tsc && node build/test.js",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "inspector": "npx @modelcontextprotocol/inspector node build/index.js",
-    "prepublish": "npm run build"
+    "preversion": "npm run test",
+    "version": "npm run build && git add .",
+    "postversion": "git push && git push --tags"
   },
   "files": [
     "build"
@@ -37,6 +40,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.13.5",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
     "typescript": "^5.7.3"
   }
 }
