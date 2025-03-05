@@ -20,11 +20,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
       - name: Run tests and create version
         env:
           BLOCKBERRY_API_KEY: ${{ secrets.BLOCKBERRY_API_KEY }}
         run: npm version patch
-        
+
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
