@@ -30,7 +30,7 @@
     "zkapp"
   ],
   "author": "0xkrish",
-  "license": "ISC",
+  "license": "MIT",
   "description": "A Mina blockchain MCP server for interfacing with LLMs",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.0",
