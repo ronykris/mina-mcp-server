@@ -19,8 +19,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Run tests and create version
+        env:
+          BLOCKBERRY_API_KEY: ${{ secrets.BLOCKBERRY_API_KEY }}
+        run: npm version patch
         
-      - run: npm version patch
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
