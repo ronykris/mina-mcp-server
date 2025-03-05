@@ -22,8 +22,8 @@ The server implements the [Model Context Protocol (MCP)](https://github.com/mode
 
 ## Demo
  
- [Talk to the mina blokchain!](./mina-mcp-server.mp4)
-
+ [![Talk to the mina blokchain!](./mina-mcp-server.mp4)]
+ 
 ## Prerequisites
 
 - A Blockberry API key (sign up at [Blockberry](https://blockberry.one))
